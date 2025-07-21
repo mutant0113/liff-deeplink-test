@@ -55,6 +55,11 @@
     <button id="openCustomTabExternal" class="btn">測試 5: openWindow (外部瀏覽器)</button>
     <button id="openCustomTabInApp" class="btn">測試 6: openWindow (應用內瀏覽器)</button>
     <button id="openCustomTabDefault" class="btn">測試 7: openWindow (預設)</button>
+    
+    <h2 class="section-title">Chrome Custom Tab 防止 App Links 跳轉測試</h2>
+    <button id="openWithIntentScheme" class="btn">測試 8: 使用 Intent Scheme</button>
+    <button id="openWithNoOverride" class="btn">測試 9: 使用 nooverride=1</button>
+    <button id="openWithEfr" class="btn">測試 10: 使用 efr=1 參數</button>
 
     <!-- 引入 LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -78,12 +83,12 @@
             // 設置按鈕點擊事件處理函數
             function setupButtonListeners() {
                 // URL 配置
-                const url = "https://buy.line.me/t?data=gzCytBUxnu35rstctd1QIgeAYgpWx0ph4GTWoQSywniS8WNPNfzcExlponz8QDT2vnuWQbRoE1zP9vyTtEo6Ix0ck6vWi9q6-Dh6IQ4-SLeIshute21OXbtDFoTcc509zmfbqXNDJfOZN0c9eCwCkbb663J7sj3yCXcUm0-DZHdGk9f5pn4q4ss3JB1x92T_PUk0_-cFtsqjvpA0vATdk4RaE7leYc3z2rKdkX-CVHRaai6mplgzGg1IWMkly0oqdYb53vqKucdbOKIi6KW_o2Uo49BNwZFBtZhC04q5VMCuAOV_p9l8bA";
+                const baseUrl = "https://buy.line.me/t?data=gzCytBUxnu35rstctd1QIgeAYgpWx0ph4GTWoQSywniS8WNPNfzcExlponz8QDT2vnuWQbRoE1zP9vyTtEo6Ix0ck6vWi9q6-Dh6IQ4-SLeIshute21OXbtDFoTcc509zmfbqXNDJfOZN0c9eCwCkbb663J7sj3yCXcUm0-DZHdGk9f5pn4q4ss3JB1x92T_PUk0_-cFtsqjvpA0vATdk4RaE7leYc3z2rKdkX-CVHRaai6mplgzGg1IWMkly0oqdYb53vqKucdbOKIi6KW_o2Uo49BNwZFBtZhC04q5VMCuAOV_p9l8bA";
                 
                 // 測試 5: 使用外部瀏覽器
                 document.getElementById('openCustomTabExternal').addEventListener('click', function() {
                     liff.openWindow({
-                        url: url,
+                        url: baseUrl,
                         external: true
                     });
                 });
@@ -91,7 +96,7 @@
                 // 測試 6: 使用應用內瀏覽器
                 document.getElementById('openCustomTabInApp').addEventListener('click', function() {
                     liff.openWindow({
-                        url: url,
+                        url: baseUrl,
                         external: false
                     });
                 });
@@ -99,7 +104,70 @@
                 // 測試 7: 使用預設設定
                 document.getElementById('openCustomTabDefault').addEventListener('click', function() {
                     liff.openWindow({
-                        url: url
+                        url: baseUrl
+                    });
+                });
+                
+                // 測試 8: 使用 Android 的 Intent Scheme
+                document.getElementById('openWithIntentScheme').addEventListener('click', function() {
+                    // 在 Android 上，Intent Scheme 可以指定使用 Chrome 開啟，並防止其他應用程式攔截
+                    const intentUrl = `intent:${baseUrl}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(baseUrl)};end`;
+                    
+                    if (/Android/i.test(navigator.userAgent)) {
+                        // 如果是 Android 設備，使用 Intent Scheme
+                        window.location.href = intentUrl;
+                    } else {
+                        // 其他設備使用 LIFF openWindow
+                        liff.openWindow({
+                            url: baseUrl,
+                            external: false
+                        });
+                    }
+                });
+                
+                // 測試 9: 使用 nooverride=1 參數
+                document.getElementById('openWithNoOverride').addEventListener('click', function() {
+                    // nooverride 參數告訴瀏覽器忽略應用程式關聯
+                    const noOverrideUrl = baseUrl + "&nooverride=1";
+                    
+                    liff.openWindow({
+                        url: noOverrideUrl,
+                        external: false
+                    });
+                });
+                
+                // 測試 10: 使用 efr=1 參數 (external frame reference)
+                document.getElementById('openWithEfr').addEventListener('click', function() {
+                    // efr=1 參數有助於防止 Chrome 的 Intent 跳轉
+                    const efrUrl = baseUrl + "&efr=1";
+                    
+                    liff.openWindow({
+                        url: efrUrl,
+                        external: false
+                    });
+                });
+                
+                // 測試 8: 使用 Intent Scheme
+                document.getElementById('openWithIntentScheme').addEventListener('click', function() {
+                    liff.openWindow({
+                        url: url + "#Intent;scheme=https;package=com.android.chrome;end",
+                        external: true
+                    });
+                });
+                
+                // 測試 9: 使用 nooverride=1
+                document.getElementById('openWithNoOverride').addEventListener('click', function() {
+                    liff.openWindow({
+                        url: url + "&nooverride=1",
+                        external: true
+                    });
+                });
+                
+                // 測試 10: 使用 efr=1 參數
+                document.getElementById('openWithEfr').addEventListener('click', function() {
+                    liff.openWindow({
+                        url: url + "&efr=1",
+                        external: true
                     });
                 });
             }
