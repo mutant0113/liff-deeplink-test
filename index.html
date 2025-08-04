@@ -62,25 +62,59 @@
     </div>
 
     <div class="section">
-        <h2>Window.open 測試</h2>
-        <button onclick="openNormalUrl()" class="btn">使用 window.open 開啟 /t/ 網址</button>
-        <button onclick="openLiffUrl()" class="btn">使用 window.open 開啟 /liff/t/ 網址</button>
+        <h2>LIFF.openWindow 測試</h2>
+        <button onclick="openNormalUrl()" class="btn">使用 liff.openWindow 開啟 /t/ 網址</button>
+        <button onclick="openLiffUrl()" class="btn">使用 liff.openWindow 開啟 /liff/t/ 網址</button>
     </div>
 
     <!-- 引入 LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script>
-        // Window.open 測試函數
+        // LIFF.openWindow 測試函數
         function openNormalUrl() {
+            if (!liff.isLoggedIn()) {
+                console.log('用戶未登入，使用 window.open 作為備用方案');
+                const url = "https://buy.line.me/t?data=gzCytBUxnu35rstctd1QIgeAYgpWx0ph4GTWoQSywniS8WNPNfzcExlponz8QDT2vnuWQbRoE1zP9vyTtEo6Ix0ck6vWi9q6-Dh6IQ4-SLeIshute21OXbtDFoTcc509zmfbqXNDJfOZN0c9eCwCkbb663J7sj3yCXcUm0-DZHdGk9f5pn4q4ss3JB1x92T_PUk0_-cFtsqjvpA0vATdk4RaE7leYc3z2rKdkX-CVHRaai6mplgzGg1IWMkly0oqdYb53vqKucdbOKIi6KW_o2Uo49BNwZFBtZhC04q5VMCuAOV_p9l8bA";
+                window.open(url, '_blank');
+                return;
+            }
+            
             const url = "https://buy.line.me/t?data=gzCytBUxnu35rstctd1QIgeAYgpWx0ph4GTWoQSywniS8WNPNfzcExlponz8QDT2vnuWQbRoE1zP9vyTtEo6Ix0ck6vWi9q6-Dh6IQ4-SLeIshute21OXbtDFoTcc509zmfbqXNDJfOZN0c9eCwCkbb663J7sj3yCXcUm0-DZHdGk9f5pn4q4ss3JB1x92T_PUk0_-cFtsqjvpA0vATdk4RaE7leYc3z2rKdkX-CVHRaai6mplgzGg1IWMkly0oqdYb53vqKucdbOKIi6KW_o2Uo49BNwZFBtZhC04q5VMCuAOV_p9l8bA";
-            console.log('Opening normal URL:', url);
-            window.open(url, '_blank');
+            console.log('Opening normal URL with liff.openWindow:', url);
+            
+            try {
+                liff.openWindow({
+                    url: url,
+                    external: true
+                });
+            } catch (error) {
+                console.error('liff.openWindow 錯誤:', error);
+                // 備用方案
+                window.open(url, '_blank');
+            }
         }
         
         function openLiffUrl() {
+            if (!liff.isLoggedIn()) {
+                console.log('用戶未登入，使用 window.open 作為備用方案');
+                const url = "https://buy.line.me/liff/t?data=gzCytBUxnu35rstctd1QIgeAYgpWx0ph4GTWoQSywniS8WNPNfzcExlponz8QDT2vnuWQbRoE1zP9vyTtEo6Ix0ck6vWi9q6-Dh6IQ4-SLeIshute21OXbtDFoTcc509zmfbqXNDJfOZN0c9eCwCkbb663J7sj3yCXcUm0-DZHdGk9f5pn4q4ss3JB1x92T_PUk0_-cFtsqjvpA0vATdk4RaE7leYc3z2rKdkX-CVHRaai6mplgzGg1IWMkly0oqdYb53vqKucdbOKIi6KW_o2Uo49BNwZFBtZhC04q5VMCuAOV_p9l8bA";
+                window.open(url, '_blank');
+                return;
+            }
+            
             const url = "https://buy.line.me/liff/t?data=gzCytBUxnu35rstctd1QIgeAYgpWx0ph4GTWoQSywniS8WNPNfzcExlponz8QDT2vnuWQbRoE1zP9vyTtEo6Ix0ck6vWi9q6-Dh6IQ4-SLeIshute21OXbtDFoTcc509zmfbqXNDJfOZN0c9eCwCkbb663J7sj3yCXcUm0-DZHdGk9f5pn4q4ss3JB1x92T_PUk0_-cFtsqjvpA0vATdk4RaE7leYc3z2rKdkX-CVHRaai6mplgzGg1IWMkly0oqdYb53vqKucdbOKIi6KW_o2Uo49BNwZFBtZhC04q5VMCuAOV_p9l8bA";
-            console.log('Opening LIFF URL:', url);
-            window.open(url, '_blank');
+            console.log('Opening LIFF URL with liff.openWindow:', url);
+            
+            try {
+                liff.openWindow({
+                    url: url,
+                    external: true
+                });
+            } catch (error) {
+                console.error('liff.openWindow 錯誤:', error);
+                // 備用方案
+                window.open(url, '_blank');
+            }
         }
 
         // 初始化 LIFF
